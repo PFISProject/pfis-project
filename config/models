@@ -3,13 +3,19 @@
 
 Article
     articleId Int
-    userId Int
-    content Text
-    title Text
-    score Int Maybe
-    deriving Show
-    deriving Eq
-
+    userId    Int
+    content   Text
+    title     Text
+    score     Int Maybe
+    deriving  Show
+    deriving  Eq
+TagArticle
+    tagArticleId Int
+    articleId    Int
+    tagId        Int
+Tag
+    tagId Int
+    name  Text
 User
     ident Text
     password Text Maybe
