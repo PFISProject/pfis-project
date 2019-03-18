@@ -3,71 +3,91 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE QuasiQuotes #-}
 module Handler.Home where
 
 import Import
-import Yesod.Form.Bootstrap3 (BootstrapFormLayout (..), renderBootstrap3)
-import Text.Julius (RawJS (..))
+import Data.Text()
+import Control.Applicative   ((<$>), (<*>))
+import Yesod.Form.Bootstrap3 (BootstrapFormLayout (..), renderBootstrap3,)
 
--- Define our data that will be used for creating the form.
-data FileForm = FileForm
-    { fileInfo :: FileInfo
-    , fileDescription :: Text
-    }
-
--- This is a handler function for the GET request method on the HomeR
--- resource pattern. All of your resource patterns are defined in
--- config/routes
---
--- The majority of the code you will write in Yesod lives in these handler
--- functions. You can spread them across multiple files if you are so
--- inclined, or create a single monolithic file.
 getHomeR :: Handler Html
-getHomeR = do
-    (formWidget, formEnctype) <- generateFormPost sampleForm
-    let submission = Nothing :: Maybe FileForm
-        handlerName = "getHomeR" :: Text
-    allComments <- runDB $ getAllComments
+getHomeR = defaultLayout [whamlet|<p>Hello World!|]
 
-    defaultLayout $ do
-        let (commentFormId, commentTextareaId, commentListId) = commentIds
-        aDomId <- newIdent
-        setTitle "Welcome To Yesod!"
-        $(widgetFile "homepage")
+-- Article form to create an article
+articleForm :: Maybe Article -> AForm Handler Article
+articleForm article = Article
+    <$> areq intField  "Article id" Nothing
+    <*> areq intField  "User id"    Nothing
+    <*> areq textField "Content"    Nothing
+    <*> areq textField "Title"      Nothing
+    <*> aopt intField  "Score"      Nothing
 
-postHomeR :: Handler Html
-postHomeR = do
-    ((result, formWidget), formEnctype) <- runFormPost sampleForm
-    let handlerName = "postHomeR" :: Text
-        submission = case result of
-            FormSuccess res -> Just res
-            _ -> Nothing
-    allComments <- runDB $ getAllComments
+getCreateArticleR :: Handler Html
+getCreateArticleR = do
+    (widget, enctype) <- generateFormPost $ renderBootstrap3 BootstrapBasicForm $ articleForm Nothing
+    defaultLayout
+        [whamlet|
+            <p>Create a new Article
+            <form method=post action=@{CreateArticleR} enctype=#{enctype}>
+                ^{widget}
+                <button>Submit article
+        |]
 
-    defaultLayout $ do
-        let (commentFormId, commentTextareaId, commentListId) = commentIds
-        aDomId <- newIdent
-        setTitle "Welcome To Yesod!"
-        $(widgetFile "homepage")
+postCreateArticleR :: Handler Html
+postCreateArticleR = do
+    ((res, widget), enctype) <- runFormPost $ renderBootstrap3 BootstrapBasicForm $ articleForm Nothing
+    case res of
+        FormSuccess article -> do
+            _ <- runDB $ insert article
+            redirect CreateArticleR
+        _ -> defaultLayout
+            [whamlet|
+                <p>Error creating the article, try again
+                <form method=post action=@{CreateArticleR} enctype=#{enctype}>
+                    ^{widget}
+                    <button>Submit article
+            |]
 
-sampleForm :: Form FileForm
-sampleForm = renderBootstrap3 BootstrapBasicForm $ FileForm
-    <$> fileAFormReq "Choose a file"
-    <*> areq textField textSettings Nothing
-    -- Add attributes like the placeholder and CSS classes.
-    where textSettings = FieldSettings
-            { fsLabel = "What's on the file?"
-            , fsTooltip = Nothing
-            , fsId = Nothing
-            , fsName = Nothing
-            , fsAttrs =
-                [ ("class", "form-control")
-                , ("placeholder", "File description")
-                ]
-            }
+-- Data to delete an article
+data DeleteArticle = DeleteArticle
+    { articleId :: Int
+    , userId    :: Int
+    } deriving (Show, Eq)
 
-commentIds :: (Text, Text, Text)
-commentIds = ("js-commentForm", "js-createCommentTextarea", "js-commentList")
+-- Getter articleId from delete form
+getArticleId (DeleteArticle articleId _) = articleId
 
-getAllComments :: DB [Entity Comment]
-getAllComments = selectList [] [Asc CommentId]
+-- Getter userId from delete form
+getUserId (DeleteArticle _ userId) = userId
+
+deleteArticleForm :: Maybe DeleteArticle -> AForm Handler DeleteArticle
+deleteArticleForm deleteArticle = DeleteArticle
+    <$> areq intField "Article ID" Nothing
+    <*> areq intField "User ID" Nothing
+
+getDeleteArticleR :: Handler Html
+getDeleteArticleR = do
+    (widget, enctype) <- generateFormPost $ renderBootstrap3 BootstrapBasicForm $ deleteArticleForm Nothing
+    defaultLayout
+        [whamlet|
+            <p>Here you can delete an article
+            <form method=post action=@{DeleteArticleR} enctype=#{enctype}>
+                ^{widget}
+                <button>Delete article
+        |]
+
+postDeleteArticleR :: Handler Html
+postDeleteArticleR = do
+    ((res, widget), enctype) <- runFormPost $ renderBootstrap3 BootstrapBasicForm $ deleteArticleForm Nothing
+    case res of
+        FormSuccess article -> do
+            _ <- runDB $ deleteWhere [ArticleArticleId ==. getArticleId article, ArticleUserId ==. getUserId article]
+            redirect CreateArticleR
+        _ -> defaultLayout
+            [whamlet|
+                <p>Error deleting the article, try again
+                <form method=post action=@{DeleteArticleR} enctype=#{enctype}>
+                    ^{widget}
+                    <button>Delete article
+            |]

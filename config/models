@@ -1,6 +1,15 @@
 -- By default this file is used by `persistFileWith` in Model.hs (which is imported by Foundation.hs)
 -- Syntax for this file here: https://github.com/yesodweb/persistent/blob/master/docs/Persistent-entity-syntax.md
 
+Article
+    articleId Int
+    userId Int
+    content Text
+    title Text
+    score Int Maybe
+    deriving Show
+    deriving Eq
+
 User
     ident Text
     password Text Maybe
