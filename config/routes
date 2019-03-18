@@ -10,6 +10,7 @@
 / HomeR GET
 /create CreateArticleR GET POST
 /delete DeleteArticleR GET POST
+/update UpdateArticleR GET POST
 
 /comments CommentR POST
 

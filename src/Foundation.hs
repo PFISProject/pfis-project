@@ -168,6 +168,7 @@ instance Yesod App where
     isAuthorized (StaticR _) _ = return Authorized
     isAuthorized CreateArticleR _ = return Authorized
     isAuthorized DeleteArticleR _ = return Authorized
+    isAuthorized UpdateArticleR _ = return Authorized
 
     -- the profile route requires that the user is authenticated, so we
     -- delegate to that function
