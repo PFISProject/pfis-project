@@ -1,12 +1,15 @@
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE QuasiQuotes #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
+{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE TemplateHaskell       #-}
+{-# LANGUAGE TypeFamilies          #-}
 module Handler.Home where
 
 import Import
 
 getHomeR :: Handler Html
-getHomeR = defaultLayout [whamlet|<p>Hello World!|]
+getHomeR =
+
+    defaultLayout $ do
+        setTitle "Haskell Blog"
+        $(widgetFile "homepage")

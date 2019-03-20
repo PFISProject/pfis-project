@@ -47,4 +47,4 @@ $else
 <footer .footer>
     <div .container>
         <p .text-muted>
-            #{appCopyright $ appSettings master}
+            copyright Juan Gonzalez & Camilo Lopez @ 2019

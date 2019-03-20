@@ -1,5 +1,9 @@
-h2##{aDomId} {
-    color: #990
+h2 {
+    color: #23a3b3
+}
+
+h1 {
+    text-align: center;
 }
 
 li {
@@ -7,7 +11,3 @@ li {
     font-size: 16px
 }
 
-##{commentTextareaId} {
-    width: 400px;
-    height: 100px;
-}
