@@ -4,19 +4,20 @@
 /static StaticR Static appStatic
 /auth   AuthR   Auth   getAuth
 
-/favicon.ico FaviconR GET
-/robots.txt RobotsR GET
+/favicon.ico             FaviconR            GET
+/robots.txt              RobotsR             GET
 
-/              HomeR               GET
+/                        HomeR               GET
 
-/createarticle CreateArticleR      GET POST
-/deletearticle DeleteArticleR      GET POST
-/updatearticle UpdateArticleR      GET POST
-/searcharticle SearchArticleByTagR GET POST
+/article/create          CreateArticleR      GET POST
+/article/delete          DeleteArticleR      GET POST
+/article/update          UpdateArticleR      GET POST
+/article/search          SearchArticleByTagR GET POST
+/article/show/#ArticleId ShowArticleR        GET 
 
-/createtag     CreateTagR          GET POST
-/assigntag     AssignTagR          GET POST
+/createtag               CreateTagR          GET POST
+/assigntag               AssignTagR          GET POST
 
-/comments      CommentR            GET POST
+/comments                CommentR            GET POST
 
-/profile       ProfileR            GET
+/profile                 ProfileR            GET
