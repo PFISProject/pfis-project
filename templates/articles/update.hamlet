@@ -1,0 +1,4 @@
+<h1>Update an article
+<form method=post action=@{UpdateArticleR} enctype=#{enctype}>
+    ^{widget}
+    <button class="btn btn-submit">Update article

@@ -7,11 +7,16 @@
 /favicon.ico FaviconR GET
 /robots.txt RobotsR GET
 
-/ HomeR GET
-/create CreateArticleR GET POST
-/delete DeleteArticleR GET POST
-/update UpdateArticleR GET POST
+/              HomeR               GET
 
-/comments CommentR POST
+/createarticle CreateArticleR      GET POST
+/deletearticle DeleteArticleR      GET POST
+/updatearticle UpdateArticleR      GET POST
+/searcharticle SearchArticleByTagR GET POST
 
-/profile ProfileR GET
+/createtag     CreateTagR          GET POST
+/assigntag     AssignTagR          GET POST
+
+/comments      CommentR                POST
+
+/profile       ProfileR            GET

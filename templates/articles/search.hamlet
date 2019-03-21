@@ -1,0 +1,5 @@
+<h1> Search a post by tagname
+
+<form method=post action=@{SearchArticleByTagR} enctype=#{enctype}>
+    ^{widget}
+    <button class="btn btn-submit">Search
