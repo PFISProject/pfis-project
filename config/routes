@@ -13,7 +13,7 @@
 /article/delete          DeleteArticleR      GET POST
 /article/update          UpdateArticleR      GET POST
 /article/search          SearchArticleByTagR GET POST
-/article/show/#ArticleId ShowArticleR        GET 
+/article/show/#ArticleId ShowArticleR        GET
 
 /createtag               CreateTagR          GET POST
 /assigntag               AssignTagR          GET POST

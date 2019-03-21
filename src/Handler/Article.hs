@@ -29,8 +29,8 @@ postCreateArticleR = do
     ((res, widget), enctype) <- runFormPost $ renderBootstrap3 BootstrapBasicForm articleForm
     case res of
         FormSuccess article -> do
-            _ <- runDB $ insert article
-            redirect CreateArticleR
+            articleId <- runDB $ insert article
+            redirect $ ShowArticleR articleId
         _ -> defaultLayout $ do
             $(widgetFile "articles/create")
 
@@ -87,3 +87,9 @@ postUpdateArticleR = do
             redirect CreateArticleR
         _ -> defaultLayout $ do
                 $(widgetFile "articles/update")
+
+getShowArticleR :: ArticleId -> Handler Html
+getShowArticleR articleId = do
+    article <- runDB $ get404 articleId
+    defaultLayout $ do
+        $(widgetFile "/articles/show")
