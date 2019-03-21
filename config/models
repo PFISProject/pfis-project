@@ -2,14 +2,21 @@
 -- Syntax for this file here: https://github.com/yesodweb/persistent/blob/master/docs/Persistent-entity-syntax.md
 
 Article
+    title     Text
+    content   Text
+    userId    Int
+    score     Int Maybe
+    deriving  Show
+    deriving  Eq
+TagArticle
     articleId Int
-    userId Int
-    content Text
-    title Text
-    score Int Maybe
+    tagId     Int
     deriving Show
     deriving Eq
-
+Tag
+    name  Text
+    deriving Show
+    deriving Eq
 User
     ident Text
     password Text Maybe
