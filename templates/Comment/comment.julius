@@ -1,0 +1,27 @@
+$(function() {
+  $("##{rawJS commentFormId}").submit(function(event) {
+    event.preventDefault();
+
+    var message = $("##{rawJS commentTextareaId}").val();
+
+    $.ajax({
+      url: '@{CommentR}',
+      type: 'POST',
+      contentType: "application/json",
+      data: JSON.stringify({
+        message: message,
+      }),
+      success: function (data) {
+        var newNode = $("<div .comment-block></div>");
+        newNode.text(data.message);
+        console.log(data);
+        $("##{rawJS commentListId}").append(newNode);
+        $("##{rawJS commentTextareaId}").val('');
+      },
+      error: function (data) {
+        console.log("Error creating comment: " + data);
+      },
+    });
+
+  });
+});

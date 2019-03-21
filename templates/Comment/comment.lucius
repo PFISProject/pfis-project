@@ -1,0 +1,66 @@
+h1 {
+    text-align: center;
+}
+
+.comment-box {
+  padding: 20px;
+  border: 1px solid #eee;
+  border-left-width: 5px;
+  border-radius: 3px;
+}
+
+.comment-box p:last-child {
+  margin-bottom: 0;
+}
+
+.comment-card {
+  position: relative;
+  padding-right: 15px;
+  padding-left: 15px;
+  border: 1px solid #8ab;
+  margin-bottom: 10px;
+}
+
+.comment-block {
+  position: relative;
+  display: block;
+  margin-bottom: 0.75rem;
+  padding: 1.25rem 0 1.25rem 0;
+}
+
+.field {
+  padding-bottom: 1rem;
+}
+
+textarea {
+  display: block;
+  width: 100%;
+  height: 80px;
+}
+
+form.form-horizontal {
+  text-align: end;
+}
+
+.section {
+  margin-bottom: 30px;
+}
+
+.section:last-child {
+  margin-bottom: 0;
+}
+
+.votes {
+  margin-bottom: 10px;
+  text-align: end;
+}
+
+.votes button {
+  padding: .2rem .7rem;
+  margin: 2px 2px 2px 0;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 3px;
+  position: relative;
+  display: inline-block;
+}

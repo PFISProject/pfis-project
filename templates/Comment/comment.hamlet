@@ -1,0 +1,27 @@
+    <div .section>
+        <div .row>
+            <div .col-lg-12>
+                <div .page-header>
+                    <h1>Comentarios
+
+        <div .row>
+            <div .col-lg-6>
+                <div .comment-box>
+                    <form .form-horizontal ##{commentFormId}>
+                        <div .field>
+                            <textarea rows="2" ##{commentTextareaId} placeholder="Escribe un comentario" required></textarea>
+
+                        <button .btn.btn-primary type=submit>
+                           Agrega el comentario
+
+           <div .col-lg-4.col-lg-offset-1>
+               <div .comment-list>
+                   <div ##{commentListId}>
+                       $forall comment <- allComments
+                            <div .comment-card>
+                                <div .comment-block>#{commentMessage $ entityVal comment}
+                                <div .votes>
+                                    <button .upvote> +1
+                                    <button .downvote> -1
+
+    <hr>

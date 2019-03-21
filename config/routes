@@ -17,6 +17,6 @@
 /createtag     CreateTagR          GET POST
 /assigntag     AssignTagR          GET POST
 
-/comments      CommentR                POST
+/comments      CommentR            GET POST
 
 /profile       ProfileR            GET

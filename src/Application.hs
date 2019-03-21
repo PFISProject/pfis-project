@@ -1,10 +1,9 @@
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE ViewPatterns #-}
-{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
+{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE RecordWildCards       #-}
+{-# LANGUAGE TemplateHaskell       #-}
+{-# LANGUAGE TypeFamilies          #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Application
     ( getApplicationDev
@@ -26,11 +25,11 @@ import Database.Persist.Postgresql          (createPostgresqlPool, pgConnStr,
 import Import
 import Language.Haskell.TH.Syntax           (qLocation)
 import Network.HTTP.Client.TLS              (getGlobalManager)
-import Network.Wai (Middleware)
+import Network.Wai                          (Middleware)
 import Network.Wai.Handler.Warp             (Settings, defaultSettings,
                                              defaultShouldDisplayException,
-                                             runSettings, setHost,
-                                             setOnException, setPort, getPort)
+                                             getPort, runSettings, setHost,
+                                             setOnException, setPort)
 import Network.Wai.Middleware.RequestLogger (Destination (Logger),
                                              IPAddrSource (..),
                                              OutputFormat (..), destination,
@@ -40,11 +39,11 @@ import System.Log.FastLogger                (defaultBufSize, newStdoutLoggerSet,
 
 -- Import all relevant handler modules here.
 -- Don't forget to add new modules to your cabal file!
+import Handler.Article
+import Handler.Comment
 import Handler.Common
 import Handler.Home
-import Handler.Comment
 import Handler.Profile
-import Handler.Article
 import Handler.Tag
 import Handler.User
 
