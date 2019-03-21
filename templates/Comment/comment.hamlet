@@ -16,8 +16,12 @@
 
            <div .col-lg-4.col-lg-offset-1>
                <div .comment-list>
-                   <ul ##{commentListId}>
+                   <div ##{commentListId}>
                        $forall comment <- allComments
-                           <li>#{commentMessage $ entityVal comment}
+                            <div .comment-card>
+                                <div .comment-block>#{commentMessage $ entityVal comment}
+                                <div .votes>
+                                    <button .upvote> +1
+                                    <button .downvote> -1
 
     <hr>

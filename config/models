@@ -15,13 +15,16 @@ User
     password Text Maybe
     UniqueUser ident
     deriving Typeable
+
 Email
     email Text
     userId UserId Maybe
     verkey Text Maybe
     UniqueEmail email
+
 Comment json 
     message Text
     article ArticleId Maybe
-    points Int Maybe
+    upvotes Int Maybe
+    downvotes Int Maybe
     deriving Show

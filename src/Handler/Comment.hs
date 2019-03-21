@@ -10,7 +10,7 @@ import Text.Julius (RawJS (..))
 
 getCommentR :: Handler Html
 getCommentR = do
-    allComments <- runDB $ getAllComments
+    allComments <- runDB $ getComments
 
     defaultLayout $ do
         let (commentFormId, commentTextareaId, commentListId) = commentIds
@@ -21,13 +21,13 @@ postCommentR :: Handler Value
 postCommentR = do
 
     comment <- (requireJsonBody :: Handler Comment)
-    let uComment = comment
+    uComment <- runDB $ insertEntity comment
     returnJson uComment
 
 
 commentIds :: (Text, Text, Text)
 commentIds = ("commentForm", "commentTextarea", "commentList")
 
-getAllComments :: DB [Entity Comment]
-getAllComments = selectList [] [Asc CommentId]
+getComments :: DB [Entity Comment]
+getComments = selectList [] [Asc CommentId]
 

@@ -13,3 +13,4 @@ getHomeR =
     defaultLayout $ do
         setTitle "Haskell Blog"
         $(widgetFile "homepage")
+
