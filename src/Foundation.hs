@@ -116,19 +116,39 @@ instance Yesod App where
                     , menuItemAccessCallback = True
                     }
                 , NavbarLeft $ MenuItem
-                    { menuItemLabel = "Profile"
-                    , menuItemRoute = ProfileR
-                    , menuItemAccessCallback = isJust muser
+                    { menuItemLabel = "Create article"
+                    , menuItemRoute = CreateArticleR
+                    , menuItemAccessCallback = True
                     }
-                , NavbarRight $ MenuItem
-                    { menuItemLabel = "Login"
-                    , menuItemRoute = AuthR LoginR
-                    , menuItemAccessCallback = isNothing muser
+                , NavbarLeft $ MenuItem
+                    { menuItemLabel = "Update article"
+                    , menuItemRoute = UpdateArticleR
+                    , menuItemAccessCallback = True
                     }
-                , NavbarRight $ MenuItem
-                    { menuItemLabel = "Logout"
-                    , menuItemRoute = AuthR LogoutR
-                    , menuItemAccessCallback = isJust muser
+                , NavbarLeft $ MenuItem
+                    { menuItemLabel = "Delete article"
+                    , menuItemRoute = DeleteArticleR
+                    , menuItemAccessCallback = True
+                    }
+                , NavbarLeft $ MenuItem
+                    { menuItemLabel = "Search article by tag"
+                    , menuItemRoute = SearchArticleByTagR
+                    , menuItemAccessCallback = True
+                    }
+                , NavbarLeft $ MenuItem
+                    { menuItemLabel = "Create tag"
+                    , menuItemRoute = CreateTagR
+                    , menuItemAccessCallback = True
+                    }
+                , NavbarLeft $ MenuItem
+                    { menuItemLabel = "Assign tag"
+                    , menuItemRoute = AssignTagR
+                    , menuItemAccessCallback = True
+                    }
+                , NavbarLeft $ MenuItem
+                    { menuItemLabel = "Comment"
+                    , menuItemRoute = CommentR
+                    , menuItemAccessCallback = True
                     }
                 ]
 

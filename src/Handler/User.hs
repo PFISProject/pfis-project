@@ -11,11 +11,8 @@ import Yesod.Form.Bootstrap3
 
 -- Data to search articles by tag
 data SearchArticleByTag = SearchArticleByTag
-    {tagName :: Text
+    {searchTagName :: Text
     } deriving (Eq)
-
--- Getter tagName from search form
-getTagName (SearchArticleByTag tagName) = tagName
 
 searchArticleByTagForm :: AForm Handler SearchArticleByTag
 searchArticleByTagForm = SearchArticleByTag
@@ -32,7 +29,7 @@ postSearchArticleByTagR = do
     ((res, widget), enctype) <- runFormPost $ renderBootstrap3 BootstrapBasicForm searchArticleByTagForm
     case res of
         FormSuccess search -> do
-            tag <- runDB $ selectList [TagName ==. getTagName search] []
+            tag <- runDB $ selectList [TagName ==. searchTagName search] []
             defaultLayout [whamlet|#{show tag}|]
         _ -> defaultLayout $ do
             $(widgetFile "articles/search")
