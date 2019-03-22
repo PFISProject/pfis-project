@@ -4,10 +4,12 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE QuasiQuotes #-}
+{-# LANGUAGE FlexibleContexts #-}
 module Handler.User where
 
 import Import
 import Yesod.Form.Bootstrap3
+import Database.Persist.Sql
 
 -- Data to search articles by tag
 data SearchArticleByTag = SearchArticleByTag
@@ -29,7 +31,9 @@ postSearchArticleByTagR = do
     ((res, widget), enctype) <- runFormPost $ renderBootstrap3 BootstrapBasicForm searchArticleByTagForm
     case res of
         FormSuccess search -> do
-            tag <- runDB $ selectList [TagName ==. searchTagName search] []
-            defaultLayout [whamlet|#{show tag}|]
+            (tag:_) <- runDB $ selectList [TagName ==. searchTagName search] []
+            articleIds <- runDB $ selectList [TagArticleTagId ==. fromIntegral (fromSqlKey (entityKey tag))] []
+            defaultLayout $ do
+                $(widgetFile "articles/showByTag")
         _ -> defaultLayout $ do
             $(widgetFile "articles/search")
