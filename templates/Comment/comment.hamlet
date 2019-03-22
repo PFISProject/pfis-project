@@ -21,7 +21,9 @@
                             <div .comment-card>
                                 <div .comment-block>#{commentMessage $ entityVal comment}
                                 <div .votes>
-                                    <button .upvote> +1
-                                    <button .downvote> -1
+                                    <button .upvote #upvote> +1
+                                    <span #up>#{commentUpvotes $ entityVal comment}
+                                    <button .downvote #downvote> -1
+                                    <span #do>#{commentDownvotes $ entityVal comment}
 
     <hr>

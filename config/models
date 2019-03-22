@@ -32,6 +32,6 @@ Email
 Comment json 
     message Text
     article ArticleId Maybe
-    upvotes Int Maybe
-    downvotes Int Maybe
+    upvotes Int default=0
+    downvotes Int default=0
     deriving Show
