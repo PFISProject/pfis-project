@@ -32,7 +32,7 @@ postSearchArticleByTagR = do
     case res of
         FormSuccess search -> do
             (tag:_) <- runDB $ selectList [TagName ==. searchTagName search] []
-            articleIds <- runDB $ selectList [TagArticleTagId ==. fromIntegral (fromSqlKey (entityKey tag))] []
+            articleIds <- runDB $ selectList [TagArticleTagId ==. entityKey tag] []
             defaultLayout $ do
                 $(widgetFile "articles/showByTag")
         _ -> defaultLayout $ do
