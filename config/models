@@ -9,8 +9,8 @@ Article
     deriving  Show
     deriving  Eq
 TagArticle
-    articleId Int
-    tagId     Int
+    articleId ArticleId
+    tagId     TagId
     deriving Show
     deriving Eq
 Tag
