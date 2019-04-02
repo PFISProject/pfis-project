@@ -61,7 +61,7 @@ postDeleteArticleR = do
 
 -- Data to update an article
 data UpdateArticle = UpdateArticle
-    {updArticleId :: Int
+    {updArticleId :: ArticleId
     , title     :: Text
     , content   :: Text
     } deriving (Show, Eq)
@@ -83,7 +83,7 @@ postUpdateArticleR = do
     ((res, widget), enctype) <- runFormPost $ renderBootstrap3 BootstrapBasicForm updateArticleForm
     case res of
         FormSuccess article -> do
-            _ <- runDB $ updateWhere [ArticleId ==. toSqlKey (fromIntegral (updArticleId article))] [ArticleTitle =. title article, ArticleContent =. content article]
+            _ <- runDB $ updateWhere [ArticleId ==. article updArtcileId] [ArticleTitle =. title article, ArticleContent =. content article]
             redirect CreateArticleR
         _ -> defaultLayout $ do
                 $(widgetFile "articles/update")
