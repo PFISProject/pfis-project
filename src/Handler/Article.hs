@@ -13,10 +13,10 @@ import Database.Persist.Sql
 -- Article form to create an article
 articleForm :: AForm Handler Article
 articleForm = Article
-    <$> areq textField (bfs ("Title" :: Text))      Nothing
-    <*> areq textField (bfs ("Content" :: Text))    Nothing
-    <*> areq intField  (bfs ("User id" :: Text))    Nothing
-    <*> aopt intField  (bfs ("Score" :: Text))      Nothing
+    <$> areq textField (bfs ("Title"   :: Text)) Nothing
+    <*> areq textField (bfs ("Content" :: Text)) Nothing
+    <*> areq intField  (bfs ("User id" :: Text)) Nothing
+    <*> aopt intField  (bfs ("Score"   :: Text)) Nothing
 
 getCreateArticleR :: Handler Html
 getCreateArticleR = do
@@ -34,59 +34,37 @@ postCreateArticleR = do
         _ -> defaultLayout $ do
             $(widgetFile "articles/create")
 
--- Data to delete an article
-data DeleteArticle = DeleteArticle
-    { delArticleId :: Int
-    } deriving (Show, Eq)
+-- DELETE Handler
+deleteArticleDeleteR :: ArticleId -> Handler Html
+deleteArticleDeleteR articleId = do
+    runDB $ delete articleId
+    redirect CreateArticleR
 
-deleteArticleForm ::AForm Handler DeleteArticle
-deleteArticleForm = DeleteArticle
-    <$> areq intField (bfs ("Article ID" :: Text)) Nothing
+updateArticleForm :: AForm Handler Article
+updateArticleForm = Article
+    <$> areq textField (bfs ("Title"   :: Text)) Nothing
+    <*> areq textField (bfs ("Content" :: Text)) Nothing
+    <*> areq intField  (bfs ("User id" :: Text)) Nothing
+    <*> aopt intField  (bfs ("Score" :: Text)) Nothing
 
-getDeleteArticleR :: Handler Html
-getDeleteArticleR = do
-    (widget, enctype) <- generateFormPost $ renderBootstrap3 BootstrapBasicForm deleteArticleForm
-    defaultLayout $ do
-        $(widgetFile "articles/delete")
-
-postDeleteArticleR :: Handler Html
-postDeleteArticleR = do
-    ((res, widget), enctype) <- runFormPost $ renderBootstrap3 BootstrapBasicForm deleteArticleForm
-    case res of
-        FormSuccess article -> do
-            _ <- runDB $ deleteWhere [ArticleId ==. toSqlKey (fromIntegral (delArticleId article))]
-            redirect CreateArticleR
-        _ -> defaultLayout $ do
-            $(widgetFile "articles/delete")
-
--- Data to update an article
-data UpdateArticle = UpdateArticle
-    {updArticleId :: ArticleId
-    , title     :: Text
-    , content   :: Text
-    } deriving (Show, Eq)
-
-updateArticleForm :: AForm Handler UpdateArticle
-updateArticleForm = UpdateArticle
-    <$> areq intField  (bfs ("Article id" :: Text)) Nothing
-    <*> areq textField (bfs ("Title" :: Text))      Nothing
-    <*> areq textField (bfs ("Content" :: Text))    Nothing
-
-getUpdateArticleR :: Handler Html
-getUpdateArticleR = do
+getUpdateArticleR :: ArticleId -> Handler Html
+getUpdateArticleR articleId = do
     (widget, enctype) <- generateFormPost $ renderBootstrap3 BootstrapBasicForm updateArticleForm
     defaultLayout $ do
+        let actionR = UpdateArticleR articleId
         $(widgetFile "articles/update")
 
-postUpdateArticleR :: Handler Html
-postUpdateArticleR = do
+postUpdateArticleR :: ArticleId -> Handler Html
+postUpdateArticleR articleId = do
+    article <- runDB $ get404 articleId 
     ((res, widget), enctype) <- runFormPost $ renderBootstrap3 BootstrapBasicForm updateArticleForm
     case res of
-        FormSuccess article -> do
-            _ <- runDB $ updateWhere [ArticleId ==. article updArtcileId] [ArticleTitle =. title article, ArticleContent =. content article]
-            redirect CreateArticleR
+        FormSuccess articleResult -> do
+            _ <- runDB $ replace articleId articleResult
+            redirect $ ShowArticleR articleId
         _ -> defaultLayout $ do
-                $(widgetFile "articles/update")
+            let actionR = UpdateArticleR articleId
+            $(widgetFile "articles/update")
 
 getShowArticleR :: ArticleId -> Handler Html
 getShowArticleR articleId = do

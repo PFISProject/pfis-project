@@ -11,12 +11,13 @@ Article
 TagArticle
     articleId ArticleId
     tagId     TagId
-    deriving Show
-    deriving Eq
+    deriving  Show
+    deriving  Eq
 Tag
-    name  Text
-    deriving Show
-    deriving Eq
+    name       Text
+    UniqueTag name
+    deriving   Show
+    deriving   Eq
 User
     ident Text
     password Text Maybe

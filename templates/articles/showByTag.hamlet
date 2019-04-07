@@ -2,7 +2,7 @@
 
 <div>
     <ul>
-        $forall Entity tagArticleId tagArticle <- articleIds
+        $forall Entity articleId article <- fullArticles
             <h4>
                 <li>
-                    <a href=@{ShowArticleR (toSqlKey (fromIntegral (tagArticleArticleId tagArticle)))}>Article
+                    <a href=@{ShowArticleR articleId}>x

@@ -1,3 +1,5 @@
+<a href=@{ArticleDeleteR articleId}><button class="btn btn-submit">Delete</button></a>
+<a href=@{UpdateArticleR articleId}><button class="btn btn-submit">Update</button></a>
+<a href=@{AssignTagR articleId}><button class="btn btn-submit">Assign tag</button></a>
 <h1>#{articleTitle article}
-
-<article>#{articleContent article}
+<article><h3>Content</h3>#{articleContent article}

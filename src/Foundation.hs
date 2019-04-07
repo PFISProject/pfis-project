@@ -120,28 +120,8 @@ instance Yesod App where
                     , menuItemAccessCallback = True
                     }
                 , NavbarLeft $ MenuItem
-                    { menuItemLabel = "Update article"
-                    , menuItemRoute = UpdateArticleR
-                    , menuItemAccessCallback = True
-                    }
-                , NavbarLeft $ MenuItem
-                    { menuItemLabel = "Delete article"
-                    , menuItemRoute = DeleteArticleR
-                    , menuItemAccessCallback = True
-                    }
-                , NavbarLeft $ MenuItem
                     { menuItemLabel = "Search article by tag"
                     , menuItemRoute = SearchArticleByTagR
-                    , menuItemAccessCallback = True
-                    }
-                , NavbarLeft $ MenuItem
-                    { menuItemLabel = "Create tag"
-                    , menuItemRoute = CreateTagR
-                    , menuItemAccessCallback = True
-                    }
-                , NavbarLeft $ MenuItem
-                    { menuItemLabel = "Assign tag"
-                    , menuItemRoute = AssignTagR
                     , menuItemAccessCallback = True
                     }
                 , NavbarLeft $ MenuItem

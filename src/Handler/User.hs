@@ -33,7 +33,7 @@ postSearchArticleByTagR = do
         FormSuccess search -> do
             (tag:_) <- runDB $ selectList [TagName ==. searchTagName search] []
             articleIds <- runDB $ selectList [TagArticleTagId ==. entityKey tag] []
-            defaultLayout $ do
-                $(widgetFile "articles/showByTag")
+            let articles = map entityVal articleIds
+            defaultLayout [whamlet|#{show articles}|]
         _ -> defaultLayout $ do
             $(widgetFile "articles/search")

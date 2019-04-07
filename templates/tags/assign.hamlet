@@ -1,5 +1,5 @@
 <h1>Assign a tag to an article
 
-<form method=post action=@{AssignTagR} enctype=#{enctype}>
+<form method=post action=@{actionR} enctype=#{enctype}>
     ^{widget}
     <button class="btn btn-submit">Assign tag

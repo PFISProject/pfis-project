@@ -8,46 +8,46 @@ module Handler.Tag where
 
 import Import
 import Yesod.Form.Bootstrap3
+import Database.Persist
 
--- Tag form to create a new Tag
-tagForm :: AForm Handler Tag
-tagForm = Tag
-    <$> areq textField (bfs ("Tag name" :: Text)) Nothing
-
-getCreateTagR :: Handler Html
-getCreateTagR = do
-    (widget, enctype) <- generateFormPost $ renderBootstrap3 BootstrapBasicForm tagForm
-    defaultLayout $ do
-            $(widgetFile "tags/create")
-
-postCreateTagR :: Handler Html
-postCreateTagR = do
-    ((res, widget), enctype) <- runFormPost $ renderBootstrap3 BootstrapBasicForm tagForm
-    case res of
-        FormSuccess tag -> do
-            _ <- runDB $ insert tag
-            redirect CreateTagR
-        _ -> defaultLayout $ do
-            $(widgetFile "tags/create")
+data AssignTagToArticle = AssignTagToArticle
+    { assignTagName :: Text
+    }
 
 -- Form to assign a tag to an article
-assignTagForm :: AForm Handler TagArticle
-assignTagForm = TagArticle
-    <$> areq intField (bfs ("Article Id" :: Text)) Nothing
-    <*> areq intField (bfs ("Tag Id" :: Text))     Nothing
+assignTagForm :: AForm Handler AssignTagToArticle
+assignTagForm = AssignTagToArticle
+    <$> areq textField (bfs ("Tag name" :: Text)) Nothing
 
-getAssignTagR :: Handler Html
-getAssignTagR = do
+getAssignTagR :: ArticleId -> Handler Html
+getAssignTagR articleId = do
     (widget, enctype) <- generateFormPost $ renderBootstrap3 BootstrapBasicForm assignTagForm
     defaultLayout $ do
+        let actionR = AssignTagR articleId
         $(widgetFile "tags/assign")
 
-postAssignTagR :: Handler Html
-postAssignTagR = do
+postAssignTagR :: ArticleId -> Handler Html
+postAssignTagR articleId = do
     ((res, widget), enctype) <- runFormPost $ renderBootstrap3 BootstrapBasicForm assignTagForm
     case res of
-        FormSuccess tagArticle -> do
-            _ <- runDB $ insert tagArticle
-            redirect AssignTagR
+        FormSuccess tag -> do
+            maybeTag <- runDB $ getBy (UniqueTag (assignTagName tag))
+            case maybeTag of
+                Nothing -> do
+                    _ <- runDB $ do
+                        tagId <- insert $ (Tag (assignTagName tag))
+                        insert $ (TagArticle articleId tagId)
+                    redirect $ ShowArticleR articleId
+                _ -> do
+                    let justTag = fromJust maybeTag
+                    _ <- runDB $ do
+                        insert $ (TagArticle articleId (entityKey justTag))
+                    redirect $ ShowArticleR articleId
         _ -> defaultLayout $ do
+            let actionR = AssignTagR articleId
             $(widgetFile "tags/assign")
+
+-- Function to get the value from a Maybe
+fromJust :: Maybe a -> a
+fromJust (Just a) = a
+fromJust Nothing = error "Error"
