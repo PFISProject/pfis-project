@@ -1,8 +1,8 @@
-<h1>Articles with the tag
+<h1>Articles with the tag #{searchTagName tag}
 
 <div>
     <ul>
-        $forall Entity articleId article <- fullArticles
+        $forall Entity articleId article <- articles
             <h4>
                 <li>
-                    <a href=@{ShowArticleR articleId}>x
+                    <a href=@{ShowArticleR articleId}>#{articleTitle article}

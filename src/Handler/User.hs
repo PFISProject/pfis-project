@@ -30,10 +30,21 @@ postSearchArticleByTagR :: Handler Html
 postSearchArticleByTagR = do
     ((res, widget), enctype) <- runFormPost $ renderBootstrap3 BootstrapBasicForm searchArticleByTagForm
     case res of
-        FormSuccess search -> do
-            (tag:_) <- runDB $ selectList [TagName ==. searchTagName search] []
-            articleIds <- runDB $ selectList [TagArticleTagId ==. entityKey tag] []
-            let articles = map entityVal articleIds
-            defaultLayout [whamlet|#{show articles}|]
+        FormSuccess tag -> do
+            maybeTag <- runDB $ getBy (UniqueTag (searchTagName tag))
+            case maybeTag of
+                Nothing -> defaultLayout [whamlet|<h1>There's no articles with #{searchTagName tag} tag|]
+                _ -> do
+                    let justTag = fromJust maybeTag
+                    tagArticles <- runDB $ selectList [TagArticleTagId ==. entityKey justTag] []
+                    let articleIds = map tagArticleArticleId (map entityVal tagArticles) -- Get articleId from every TagArticle entity in tagArticles
+                    articles <- runDB $ selectList [ArticleId <-. articleIds] []
+                    defaultLayout $ do
+                        $(widgetFile "articles/showByTag")
         _ -> defaultLayout $ do
             $(widgetFile "articles/search")
+
+-- Function to get the value from a Maybe
+fromJust :: Maybe a -> a
+fromJust (Just a) = a
+fromJust Nothing = error "Error"            
