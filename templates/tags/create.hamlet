@@ -1,5 +1,0 @@
-<h1>Create a new Tag
-
-<form method=post action=@{CreateTagR} enctype=#{enctype}>
-    ^{widget}
-    <button class="btn btn-submit">Create tag

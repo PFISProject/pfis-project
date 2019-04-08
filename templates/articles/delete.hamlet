@@ -1,4 +1,0 @@
-<h1>Delete an article
-<form method=post action=@{DeleteArticleR} enctype=#{enctype}>
-    ^{widget}
-    <button class="btn btn-submit">Delete article
