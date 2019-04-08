@@ -1,0 +1,6 @@
+function deleteArticle(deleteArticleUrl) {
+    $.ajax({ 
+        url: deleteArticleUrl, 
+        type: 'DELETE'
+    }); 
+}
