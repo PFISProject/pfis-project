@@ -3,6 +3,13 @@
     <a href=@{UpdateArticleR articleId}><button class="btn btn-submit">Update</button></a>
     <a href=@{AssignTagR articleId}><button class="btn btn-submit">Assign tag</button></a>
     <a href=@{AssignCommentR articleId}><button class="btn btn-submit">Comment</button></a>
-<div #content>
+<div>
     <h1><b>#{articleTitle article}</b></h1>
-    <p>#{articleContent article}    
+    <p>#{articleContent article}
+<div>
+    <h1><b>Comments</b></h1>
+    <ul>
+        $forall Entity commentId comment <- comments
+            <h4>
+                <li>
+                    #{commentMessage comment}

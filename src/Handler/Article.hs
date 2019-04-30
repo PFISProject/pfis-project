@@ -69,6 +69,7 @@ postUpdateArticleR articleId = do
 getShowArticleR :: ArticleId -> Handler Html
 getShowArticleR articleId = do
     article <- runDB $ get404 articleId
+    comments <- runDB $ selectList [CommentArticle ==. articleId] []
     defaultLayout $ do
         $(widgetFile "/articles/show")
 
