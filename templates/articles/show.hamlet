@@ -1,5 +1,8 @@
-<button onclick=deleteArticle("@{ArticleDeleteR articleId}") class="btn btn-submit">Delete</button>
-<a href=@{UpdateArticleR articleId}><button class="btn btn-submit">Update</button></a>
-<a href=@{AssignTagR articleId}><button class="btn btn-submit">Assign tag</button></a>
-<h1>#{articleTitle article}
-<article><h3>Content</h3>#{articleContent article}
+<div>
+    <button onclick=deleteArticle("@{ArticleDeleteR articleId}") class="btn btn-submit">Delete</button>
+    <a href=@{UpdateArticleR articleId}><button class="btn btn-submit">Update</button></a>
+    <a href=@{AssignTagR articleId}><button class="btn btn-submit">Assign tag</button></a>
+    <a href=@{AssignCommentR articleId}><button class="btn btn-submit">Comment</button></a>
+<div #content>
+    <h1><b>#{articleTitle article}</b></h1>
+    <p>#{articleContent article}    

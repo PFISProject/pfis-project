@@ -1,0 +1,5 @@
+<h1>Comment article
+
+<form method=post action=@{actionR} enctype=#{enctype}>
+    ^{widget}
+    <button class="btn btn-submit">Comment

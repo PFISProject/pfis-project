@@ -71,3 +71,4 @@ getShowArticleR articleId = do
     article <- runDB $ get404 articleId
     defaultLayout $ do
         $(widgetFile "/articles/show")
+

@@ -6,31 +6,32 @@
 module Handler.Comment where
 
 import Import
-import Text.Julius 
-import Text.Julius (RawJS (..))
+import Yesod.Form.Bootstrap3
+import Database.Persist.Sql
 
-getCommentR :: Handler Html
-getCommentR = do
-    allComments <- runDB $ getComments
+data AssingCommentToArticle = AssingCommentToArticle
+    { assignComment :: Text        
+    }
 
+-- Form to comment an article
+commentForm :: AForm Handler AssingCommentToArticle
+commentForm = AssingCommentToArticle
+    <$> areq textField (bfs ("Comment" :: Text)) Nothing    
+
+getAssignCommentR :: ArticleId -> Handler Html
+getAssignCommentR articleId = do
+    (widget, enctype) <- generateFormPost $ renderBootstrap3 BootstrapBasicForm commentForm
     defaultLayout $ do
-        let (commentFormId, commentTextareaId, commentListId, upVoteId, downVoteId) = commentIds
-        let _ =  $(juliusFileReload "templates/Comment/comment.julius")
-        setTitle "Haskell Blog"
-        $(widgetFile "Comment/comment")
+        let actionR = AssignCommentR articleId
+        $(widgetFile "comment/create")
 
-postCommentR :: Handler Value
-postCommentR = do
-
-    comment <- (requireJsonBody :: Handler Comment)
-    commentId <- runDB $ insert comment
-    let uComment = Entity commentId comment
-    returnJson uComment
-
-
-commentIds :: (Text, Text, Text, Text, Text)
-commentIds = ("commentForm", "commentTextarea", "commentList", "upVote", "downVote")
-
-getComments :: DB [Entity Comment]
-getComments = selectList [] [Asc CommentId]
-
+postAssignCommentR :: ArticleId -> Handler Html
+postAssignCommentR articleId = do
+    ((res, widget), enctype) <- runFormPost $ renderBootstrap3 BootstrapBasicForm commentForm
+    case res of
+        FormSuccess comment -> do
+            _ <- runDB $ insert (Comment (assignComment comment) articleId)
+            redirect $ ShowArticleR articleId
+        _ -> defaultLayout $ do
+            let actionR = AssignCommentR articleId
+            $(widgetFile "comment/create")            

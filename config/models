@@ -30,9 +30,7 @@ Email
     verkey Text Maybe
     UniqueEmail email
 
-Comment json 
+Comment
     message Text
-    article ArticleId Maybe
-    upvotes Int default=0
-    downvotes Int default=0
+    article ArticleId
     deriving Show

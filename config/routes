@@ -9,14 +9,13 @@
 
 /                          HomeR               GET
 
-/article/create            CreateArticleR      GET POST
-/article/delete/#ArticleId ArticleDeleteR      DELETE
-/article/update/#ArticleId UpdateArticleR      GET POST
-/article/search            SearchArticleByTagR GET POST
-/article/show/#ArticleId   ShowArticleR        GET
+/article/create             CreateArticleR      GET POST
+/article/delete/#ArticleId  ArticleDeleteR      DELETE
+/article/update/#ArticleId  UpdateArticleR      GET POST
+/article/search             SearchArticleByTagR GET POST
+/article/show/#ArticleId    ShowArticleR        GET
+/article/comment/#ArticleId AssignCommentR      GET POST
 
 /tag/assign/#ArticleId     AssignTagR          GET POST
-
-/comments                  CommentR            GET POST
 
 /profile                   ProfileR            GET

@@ -123,12 +123,7 @@ instance Yesod App where
                     { menuItemLabel = "Search article by tag"
                     , menuItemRoute = SearchArticleByTagR
                     , menuItemAccessCallback = True
-                    }
-                , NavbarLeft $ MenuItem
-                    { menuItemLabel = "Comment"
-                    , menuItemRoute = CommentR
-                    , menuItemAccessCallback = True
-                    }
+                    }                
                 ]
 
         let navbarLeftMenuItems = [x | NavbarLeft x <- menuItems]
@@ -160,7 +155,6 @@ instance Yesod App where
         -> Handler AuthResult
     -- Routes not requiring authentication.
     isAuthorized (AuthR _) _           = return Authorized
-    isAuthorized CommentR _            = return Authorized
     isAuthorized HomeR _               = return Authorized
     isAuthorized FaviconR _            = return Authorized
     isAuthorized RobotsR _             = return Authorized
