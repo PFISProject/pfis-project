@@ -8,9 +8,8 @@ module Handler.Home where
 import Import
 
 getHomeR :: Handler Html
-getHomeR =
-
+getHomeR = do
+    articles <- runDB $ selectList [] []
     defaultLayout $ do
-        setTitle "Haskell Blog"
         $(widgetFile "homepage")
 
