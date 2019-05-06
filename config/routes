@@ -16,6 +16,8 @@
 /article/show/#ArticleId    ShowArticleR        GET
 /article/comment/#ArticleId AssignCommentR      GET POST
 
-/tag/assign/#ArticleId     AssignTagR          GET POST
+/user/all                   ShowUsersR          GET
 
-/profile                   ProfileR            GET
+/tag/assign/#ArticleId     AssignTagR           GET POST
+
+/profile                   ProfileR             GET

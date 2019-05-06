@@ -9,3 +9,9 @@ module Handler.Admin where
 import Import
 import Yesod.Form.Bootstrap3
 import Database.Persist.Sql
+
+getShowUsersR :: Handler Html
+getShowUsersR = do
+    users <- runDB $ selectList [] []
+    defaultLayout $ do
+        $(widgetFile "users/showAll")
