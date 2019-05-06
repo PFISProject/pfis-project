@@ -247,6 +247,7 @@ instance YesodAuth App where
             Nothing -> Authenticated <$> insert User
                 { userIdent = credsIdent creds
                 , userPassword = Nothing
+                , userPerms = []
                 }
 
     -- You can add other plugins like Google Email, email or OAuth here

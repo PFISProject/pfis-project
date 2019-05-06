@@ -47,4 +47,10 @@ postSearchArticleByTagR = do
 -- Function to get the value from a Maybe
 fromJust :: Maybe a -> a
 fromJust (Just a) = a
-fromJust Nothing = error "Error"            
+fromJust Nothing = error "Error"
+
+getShowUserR :: UserId -> Handler Html
+getShowUserR userId = do
+    user <- runDB $ get404 userId
+    defaultLayout $ do
+        $(widgetFile "users/show")

@@ -2,35 +2,36 @@
 -- Syntax for this file here: https://github.com/yesodweb/persistent/blob/master/docs/Persistent-entity-syntax.md
 
 Article
-    title     Text
-    content   Text
-    userId    Int
-    score     Int Maybe
-    deriving  Show
-    deriving  Eq
+    title    Text
+    content  Text
+    userId   Int
+    score    Int Maybe
+    deriving Show
+    deriving Eq
 TagArticle
     articleId ArticleId
     tagId     TagId
     deriving  Show
     deriving  Eq
 Tag
-    name       Text
+    name      Text
     UniqueTag name
-    deriving   Show
-    deriving   Eq
+    deriving  Show
+    deriving  Eq
 User
-    ident Text
-    password Text Maybe
+    ident      Text
+    password   Text Maybe
+    perms      [Privileges]
     UniqueUser ident
-    deriving Typeable
+    deriving   Typeable
 
 Email
-    email Text
-    userId UserId Maybe
-    verkey Text Maybe
+    email       Text
+    userId      UserId Maybe
+    verkey      Text Maybe
     UniqueEmail email
 
 Comment
-    message Text
-    article ArticleId
+    message  Text
+    article  ArticleId
     deriving Show

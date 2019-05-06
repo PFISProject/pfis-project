@@ -3,5 +3,5 @@
     <ul>
         $forall Entity userId user <- users
             <h4>
-                <li>
-                    #{userIdent user}
+                <li>                
+                    <a href=@{ShowUserR userId}>#{userIdent user}
