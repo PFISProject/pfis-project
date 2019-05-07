@@ -14,23 +14,24 @@ TagArticle
     deriving  Show Eq
 
 Tag
-    name       Text
+    name      Text
     UniqueTag name
     deriving   Show Eq
 
 User
-    ident Text
-    password Text Maybe
+    ident      Text
+    password   Text Maybe
+    perms      [Privileges]
     UniqueUser ident
-    deriving Typeable
+    deriving   Typeable
 
 Email
-    email Text
-    userId UserId Maybe
-    verkey Text Maybe
+    email       Text
+    userId      UserId Maybe
+    verkey      Text Maybe
     UniqueEmail email
 
 Comment
-    message Text
-    article ArticleId
+    message  Text
+    article  ArticleId
     deriving Show
