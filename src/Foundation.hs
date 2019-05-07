@@ -20,6 +20,7 @@ import Text.Jasmine         (minifym)
 import Yesod.Auth.Dummy
 
 import qualified Data.CaseInsensitive     as CI
+import qualified Data.List                as L
 import qualified Data.Text.Encoding       as TE
 import           Yesod.Auth.OAuth2.Google
 import           Yesod.Auth.OpenId        (IdentifierType (Claimed), authOpenId)
@@ -161,12 +162,21 @@ instance Yesod App where
         -> Bool       -- ^ Whether or not this is a "write" request.
         -> Handler AuthResult
     -- Routes not requiring authentication.
-    isAuthorized (AuthR _) _   = return Authorized
-    isAuthorized HomeR _       = return Authorized
-    isAuthorized FaviconR _    = return Authorized
-    isAuthorized RobotsR _     = return Authorized
-    isAuthorized (StaticR _) _ = return Authorized
-    isAuthorized _ _           = return Authorized
+    isAuthorized (AuthR _) _           = return Authorized
+    isAuthorized HomeR _               = return Authorized
+    isAuthorized FaviconR _            = return Authorized
+    isAuthorized RobotsR _             = return Authorized
+    isAuthorized (StaticR _) _         = return Authorized
+
+    isAuthorized (ShowArticleR _) _    = return Authorized
+    isAuthorized SearchArticleByTagR _ = return Authorized
+    isAuthorized CreateArticleR _      = authorizedForPrivileges [PrvUser]
+    isAuthorized (UpdateArticleR _) _  = authorizedForPrivileges [PrvUser]
+    isAuthorized (ArticleDeleteR _) _  = authorizedForPrivileges [PrvUser]
+    isAuthorized (AssignCommentR _) _  = authorizedForPrivileges [PrvUser]
+    isAuthorized (AssignTagR _) _      = authorizedForPrivileges [PrvUser]
+    isAuthorized ShowUsersR _          = authorizedForPrivileges [PrvAdmin]
+    isAuthorized (ShowUserR _) _       = authorizedForPrivileges [PrvAdmin]
 
     -- the profile route requires that the user is authenticated, so we
     -- delegate to that function
@@ -254,6 +264,7 @@ instance YesodAuth App where
             Nothing -> Authenticated <$> insert User
                 { userIdent = credsIdent creds
                 , userPassword = Nothing
+                , userPerms = []
                 }
 
     -- You can add other plugins like Google Email, email or OAuth here
@@ -271,6 +282,22 @@ isAuthenticated = do
         Just _  -> Authorized
 
 instance YesodAuthPersist App
+
+authorizedForPrivileges :: [Privileges] -> Handler AuthResult
+authorizedForPrivileges perms = do
+    mu <- maybeAuth
+    return $ case mu of
+     Nothing -> Unauthorized "You must login to access this page"
+     Just u@(Entity userId user) ->
+       if hasPrivileges u perms
+            then Authorized
+            else Unauthorized "Not enought priviledges"
+
+hasPrivilege :: Entity User -> Privileges -> Bool
+hasPrivilege u p = hasPrivileges u [p]
+
+hasPrivileges :: Entity User -> [Privileges] -> Bool
+hasPrivileges (Entity _ user) perms = null (perms L.\\ userPerms user)
 
 -- This instance is required to use forms. You can modify renderMessage to
 -- achieve customized and internationalized form validation messages.

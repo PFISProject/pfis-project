@@ -1,0 +1,7 @@
+<h1> Users </h1>
+<div>
+    <ul>
+        $forall Entity userId user <- users
+            <h4>
+                <li>                
+                    <a href=@{ShowUserR userId}>#{userIdent user}
