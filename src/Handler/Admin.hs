@@ -7,8 +7,7 @@
 module Handler.Admin where
 
 import Import
-import Yesod.Form.Bootstrap3
-import Database.Persist.Sql
+import Yesod.Form.Bootstrap3()
 
 getShowUsersR :: Handler Html
 getShowUsersR = do
