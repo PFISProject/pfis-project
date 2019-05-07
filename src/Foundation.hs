@@ -20,6 +20,7 @@ import Text.Jasmine         (minifym)
 import Yesod.Auth.Dummy
 
 import qualified Data.CaseInsensitive     as CI
+import qualified Data.List                as L
 import qualified Data.Text.Encoding       as TE
 import           Yesod.Auth.OAuth2.Google
 import           Yesod.Auth.OpenId        (IdentifierType (Claimed), authOpenId)
@@ -128,12 +129,22 @@ instance Yesod App where
 
     isAuthorized :: Route App -> Bool -> Handler AuthResult
     -- Routes not requiring authentication.
-    isAuthorized (AuthR _) _   = return Authorized
-    isAuthorized HomeR _       = return Authorized
-    isAuthorized FaviconR _    = return Authorized
-    isAuthorized RobotsR _     = return Authorized
-    isAuthorized (StaticR _) _ = return Authorized
-    
+    isAuthorized (AuthR _) _           = return Authorized
+    isAuthorized HomeR _               = return Authorized
+    isAuthorized FaviconR _            = return Authorized
+    isAuthorized RobotsR _             = return Authorized
+    isAuthorized (StaticR _) _         = return Authorized
+
+    isAuthorized (ShowArticleR _) _    = return Authorized
+    isAuthorized SearchArticleByTagR _ = return Authorized
+    isAuthorized CreateArticleR _      = authorizedForPrivileges [PrvUser]
+    isAuthorized (UpdateArticleR _) _  = authorizedForPrivileges [PrvUser]
+    isAuthorized (ArticleDeleteR _) _  = authorizedForPrivileges [PrvUser]
+    isAuthorized (AssignCommentR _) _  = authorizedForPrivileges [PrvUser]
+    isAuthorized (AssignTagR _) _      = authorizedForPrivileges [PrvUser]
+    isAuthorized (ShowUserR _) _       = authorizedForPrivileges [PrvAdmin]
+    isAuthorized ShowUsersR _          = authorizedForPrivileges [PrvAdmin]
+
     addStaticContent
         :: Text  -- ^ The file extension
         -> Text -- ^ The MIME content type
@@ -207,8 +218,9 @@ instance YesodAuth App where
         case x of
             Just (Entity uid _) -> return $ Authenticated uid
             Nothing -> Authenticated <$> insert User
-                { userIdent = credsIdent creds
+                { userIdent    = credsIdent creds
                 , userPassword = Nothing
+                , userPerms    = []
                 }
 
     -- You can add other plugins like Google Email, email or OAuth here
@@ -222,17 +234,33 @@ isAuthenticated :: Handler AuthResult
 isAuthenticated = do
     muid <- maybeAuthId
     return $ case muid of
-        Nothing -> Unauthorized "You must login to access this page"
+        Nothing -> Unauthorized "Por favor primero acceda para ver esta página"
         Just _  -> Authorized
 
 instance YesodAuthPersist App
+
+authorizedForPrivileges :: [Privileges] -> Handler AuthResult
+authorizedForPrivileges perms = do
+    mu <- maybeAuth
+    return $ case mu of
+     Nothing -> Unauthorized "Por favor primero acceda para ver esta página"
+     Just u@(Entity userId user) ->
+       if hasPrivileges u perms
+            then Authorized
+            else Unauthorized "No tiene los permisos suficientes"
+
+hasPrivilege :: Entity User -> Privileges -> Bool
+hasPrivilege u p = hasPrivileges u [p]
+
+hasPrivileges :: Entity User -> [Privileges] -> Bool
+hasPrivileges (Entity _ user) perms = null (perms L.\\ userPerms user)
 
 instance RenderMessage App FormMessage where
     renderMessage :: App -> [Lang] -> FormMessage -> Text
     renderMessage _ _ = defaultFormMessage
 
 instance HasHttpManager App where
-    getHttpManager :: App -> Manager   
+    getHttpManager :: App -> Manager
     getHttpManager = appHttpManager
 
 unsafeHandler :: App -> Handler a -> IO a
