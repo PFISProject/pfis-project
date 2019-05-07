@@ -6,18 +6,18 @@ Article
     content   Text
     userId    Int
     score     Int Maybe
-    deriving  Show
-    deriving  Eq
+    deriving  Show Eq
+
 TagArticle
     articleId ArticleId
     tagId     TagId
-    deriving  Show
-    deriving  Eq
+    deriving  Show Eq
+
 Tag
     name       Text
     UniqueTag name
-    deriving   Show
-    deriving   Eq
+    deriving   Show Eq
+
 User
     ident Text
     password Text Maybe
