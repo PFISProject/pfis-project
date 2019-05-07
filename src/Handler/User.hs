@@ -1,15 +1,15 @@
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE QuasiQuotes #-}
-{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
+{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE QuasiQuotes           #-}
+{-# LANGUAGE TemplateHaskell       #-}
+{-# LANGUAGE TypeFamilies          #-}
+
 module Handler.User where
 
 import Import
 import Yesod.Form.Bootstrap3
-import Database.Persist.Sql
 
 -- Data to search articles by tag
 data SearchArticleByTag = SearchArticleByTag
@@ -47,7 +47,7 @@ postSearchArticleByTagR = do
 -- Function to get the value from a Maybe
 fromJust :: Maybe a -> a
 fromJust (Just a) = a
-fromJust Nothing = error "Error"
+fromJust Nothing  = error "Error"
 
 getShowUserR :: UserId -> Handler Html
 getShowUserR userId = do

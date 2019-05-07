@@ -3,20 +3,20 @@
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE TemplateHaskell       #-}
 {-# LANGUAGE TypeFamilies          #-}
+
 module Handler.Comment where
 
 import Import
 import Yesod.Form.Bootstrap3
-import Database.Persist.Sql
 
 data AssingCommentToArticle = AssingCommentToArticle
-    { assignComment :: Text        
+    { assignComment :: Text
     }
 
 -- Form to comment an article
 commentForm :: AForm Handler AssingCommentToArticle
 commentForm = AssingCommentToArticle
-    <$> areq textField (bfs ("Comment" :: Text)) Nothing    
+    <$> areq textField (bfs ("Comment" :: Text)) Nothing
 
 getAssignCommentR :: ArticleId -> Handler Html
 getAssignCommentR articleId = do
@@ -34,4 +34,4 @@ postAssignCommentR articleId = do
             redirect $ ShowArticleR articleId
         _ -> defaultLayout $ do
             let actionR = AssignCommentR articleId
-            $(widgetFile "comment/create")            
+            $(widgetFile "comment/create")

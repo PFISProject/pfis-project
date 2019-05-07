@@ -1,14 +1,14 @@
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE QuasiQuotes #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
+{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE QuasiQuotes           #-}
+{-# LANGUAGE TemplateHaskell       #-}
+{-# LANGUAGE TypeFamilies          #-}
+
 module Handler.Tag where
 
 import Import
 import Yesod.Form.Bootstrap3
-import Database.Persist
 
 data AssignTagToArticle = AssignTagToArticle
     { assignTagName :: Text
@@ -50,4 +50,4 @@ postAssignTagR articleId = do
 -- Function to get the value from a Maybe
 fromJust :: Maybe a -> a
 fromJust (Just a) = a
-fromJust Nothing = error "Error"
+fromJust Nothing  = error "Error"

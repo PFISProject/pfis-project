@@ -1,14 +1,14 @@
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE QuasiQuotes #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
+{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE QuasiQuotes           #-}
+{-# LANGUAGE TemplateHaskell       #-}
+{-# LANGUAGE TypeFamilies          #-}
+
 module Handler.Article where
 
 import Import
 import Yesod.Form.Bootstrap3
-import Database.Persist.Sql
 
 -- Article form to create an article
 articleForm :: AForm Handler Article
@@ -56,7 +56,7 @@ getUpdateArticleR articleId = do
 
 postUpdateArticleR :: ArticleId -> Handler Html
 postUpdateArticleR articleId = do
-    article <- runDB $ get404 articleId 
+    _ <- runDB $ get404 articleId
     ((res, widget), enctype) <- runFormPost $ renderBootstrap3 BootstrapBasicForm updateArticleForm
     case res of
         FormSuccess articleResult -> do
