@@ -87,7 +87,8 @@ instance Yesod App where
     defaultLayout widget = do
         master <- getYesod
         mmsg <- getMessage
-
+        
+        muser <- maybeAuthPair
         mcurrentRoute <- getCurrentRoute
 
         -- Get the breadcrumbs, as defined in the YesodBreadcrumbs instance.
@@ -103,12 +104,27 @@ instance Yesod App where
                 , NavbarLeft $ MenuItem
                     { menuItemLabel = "Create article"
                     , menuItemRoute = CreateArticleR
-                    , menuItemAccessCallback = True
+                    , menuItemAccessCallback = isJust muser
                     }
                 , NavbarLeft $ MenuItem
-                    { menuItemLabel = "Search article by tag"
+                    { menuItemLabel = "Search articles by tag"
                     , menuItemRoute = SearchArticleByTagR
-                    , menuItemAccessCallback = True
+                    , menuItemAccessCallback = isNothing muser
+                    }
+                , NavbarLeft $ MenuItem
+                    { menuItemLabel = "View user profile" 
+                    , menuItemRoute = ProfileR
+                    , menuItemAccessCallback = isJust muser
+                    }
+                , NavbarLeft $ MenuItem
+                    { menuItemLabel = "Login"
+                    , menuItemRoute = AuthR LoginR
+                    , menuItemAccessCallback = isNothing muser
+                    }
+                , NavbarLeft $ MenuItem
+                    { menuItemLabel = "Logout"
+                    , menuItemRoute = AuthR LoginR
+                    , menuItemAccessCallback = isJust muser
                     }
                 ]
 
@@ -134,9 +150,10 @@ instance Yesod App where
     isAuthorized FaviconR _            = return Authorized
     isAuthorized RobotsR _             = return Authorized
     isAuthorized (StaticR _) _         = return Authorized
-
     isAuthorized (ShowArticleR _) _    = return Authorized
     isAuthorized SearchArticleByTagR _ = return Authorized
+    
+    isAuthorized ProfileR _            = isAuthenticated 
     isAuthorized CreateArticleR _      = authorizedForPrivileges [PrvUser]
     isAuthorized (UpdateArticleR _) _  = authorizedForPrivileges [PrvUser]
     isAuthorized (ArticleDeleteR _) _  = authorizedForPrivileges [PrvUser]
@@ -181,10 +198,11 @@ instance Yesod App where
 instance YesodBreadcrumbs App where
 
     breadcrumb :: Route App -> Handler (Text, Maybe (Route App))
-    breadcrumb HomeR     = return ("Home", Nothing)
-    breadcrumb (AuthR _) = return ("Login", Just HomeR)
-    breadcrumb ProfileR  = return ("Profile", Just HomeR)
-    breadcrumb  _        = return ("home", Nothing)
+    breadcrumb HomeR      = return ("Home", Nothing)
+    breadcrumb (AuthR _)  = return ("Login", Just HomeR)
+    breadcrumb ProfileR   = return ("Profile", Just HomeR)
+    breadcrumb ShowUsersR = return ("Users", Just HomeR)
+    breadcrumb  _         = return ("home", Nothing)
 
 -- How to run database actions.
 instance YesodPersist App where
@@ -220,7 +238,7 @@ instance YesodAuth App where
             Nothing -> Authenticated <$> insert User
                 { userIdent    = credsIdent creds
                 , userPassword = Nothing
-                , userPerms    = []
+                , userPerms    = [PrvUser]
                 }
 
     -- You can add other plugins like Google Email, email or OAuth here

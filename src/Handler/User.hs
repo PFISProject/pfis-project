@@ -51,6 +51,6 @@ fromJust Nothing  = error "Error"
 
 getShowUserR :: UserId -> Handler Html
 getShowUserR userId = do
-    user <- runDB $ get404 userId
+    _ <- runDB $ get404 userId
     defaultLayout $ do
         $(widgetFile "users/show")
