@@ -116,14 +116,14 @@ instance Yesod App where
                     , menuItemRoute = ProfileR
                     , menuItemAccessCallback = isJust muser
                     }
-                , NavbarLeft $ MenuItem
+                , NavbarRight $ MenuItem
                     { menuItemLabel = "Login"
                     , menuItemRoute = AuthR LoginR
                     , menuItemAccessCallback = isNothing muser
                     }
-                , NavbarLeft $ MenuItem
+                , NavbarRight $ MenuItem
                     { menuItemLabel = "Logout"
-                    , menuItemRoute = AuthR LoginR
+                    , menuItemRoute = AuthR LogoutR
                     , menuItemAccessCallback = isJust muser
                     }
                 ]
@@ -243,7 +243,7 @@ instance YesodAuth App where
 
     -- You can add other plugins like Google Email, email or OAuth here
     authPlugins :: App -> [AuthPlugin App]
-    authPlugins app = [authOpenId Claimed [], oauth2GoogleScoped ["email", "profile"] clientId clientSecret] ++ extraAuthPlugins
+    authPlugins app = [oauth2GoogleScoped ["email", "profile"] clientId clientSecret] ++ extraAuthPlugins
         -- Enable authDummy login if enabled.
         where extraAuthPlugins = [authDummy | appAuthDummyLogin $ appSettings app]
 
