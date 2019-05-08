@@ -4,7 +4,7 @@
 Article
     title     Text
     content   Text
-    userId    Int
+    author    Int 
     score     Int Maybe
     deriving  Show Eq
 

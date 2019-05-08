@@ -13,4 +13,4 @@ getProfileR = do
     (_, user) <- requireAuthPair
     defaultLayout $ do
         setTitle . toHtml $ userIdent user <> "'s User page"
-        $(widgetFile "profile")
+        $(widgetFile "profile/show")

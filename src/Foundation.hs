@@ -23,7 +23,6 @@ import qualified Data.CaseInsensitive     as CI
 import qualified Data.List                as L
 import qualified Data.Text.Encoding       as TE
 import           Yesod.Auth.OAuth2.Google
-import           Yesod.Auth.OpenId        (IdentifierType (Claimed), authOpenId)
 import           Yesod.Core.Types         (Logger)
 import qualified Yesod.Core.Unsafe        as Unsafe
 import           Yesod.Default.Util       (addStaticContentExternal)
