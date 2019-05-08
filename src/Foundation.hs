@@ -117,13 +117,18 @@ instance Yesod App where
                     , menuItemAccessCallback = isJust muser
                     }
                 , NavbarLeft $ MenuItem
+                    { menuItemLabel = "Edit user privileges" 
+                    , menuItemRoute = ShowUsersR
+                    , menuItemAccessCallback = isJust muser
+                    }                    
+                , NavbarLeft $ MenuItem
                     { menuItemLabel = "Login"
                     , menuItemRoute = AuthR LoginR
                     , menuItemAccessCallback = isNothing muser
                     }
                 , NavbarLeft $ MenuItem
                     { menuItemLabel = "Logout"
-                    , menuItemRoute = AuthR LoginR
+                    , menuItemRoute = AuthR LogoutR
                     , menuItemAccessCallback = isJust muser
                     }
                 ]
@@ -145,22 +150,25 @@ instance Yesod App where
 
     isAuthorized :: Route App -> Bool -> Handler AuthResult
     -- Routes not requiring authentication.
-    isAuthorized (AuthR _) _           = return Authorized
-    isAuthorized HomeR _               = return Authorized
-    isAuthorized FaviconR _            = return Authorized
-    isAuthorized RobotsR _             = return Authorized
-    isAuthorized (StaticR _) _         = return Authorized
-    isAuthorized (ShowArticleR _) _    = return Authorized
-    isAuthorized SearchArticleByTagR _ = return Authorized
+    isAuthorized (AuthR _) _             = return Authorized
+    isAuthorized HomeR _                 = return Authorized
+    isAuthorized FaviconR _              = return Authorized
+    isAuthorized RobotsR _               = return Authorized
+    isAuthorized (StaticR _) _           = return Authorized
+    isAuthorized (ShowArticleR _) _      = return Authorized
+    isAuthorized SearchArticleByTagR _   = return Authorized
     
-    isAuthorized ProfileR _            = isAuthenticated 
-    isAuthorized CreateArticleR _      = authorizedForPrivileges [PrvUser]
-    isAuthorized (UpdateArticleR _) _  = authorizedForPrivileges [PrvUser]
-    isAuthorized (ArticleDeleteR _) _  = authorizedForPrivileges [PrvUser]
-    isAuthorized (AssignCommentR _) _  = authorizedForPrivileges [PrvUser]
-    isAuthorized (AssignTagR _) _      = authorizedForPrivileges [PrvUser]
-    isAuthorized (ShowUserR _) _       = authorizedForPrivileges [PrvAdmin]
-    isAuthorized ShowUsersR _          = authorizedForPrivileges [PrvAdmin]
+    isAuthorized ProfileR _              = isAuthenticated 
+    isAuthorized CreateArticleR _        = authorizedForPrivileges [PrvUser]
+    isAuthorized (UpdateArticleR _) _    = authorizedForPrivileges [PrvUser]
+    isAuthorized (ArticleDeleteR _) _    = authorizedForPrivileges [PrvUser]
+    isAuthorized (AssignCommentR _) _    = authorizedForPrivileges [PrvUser]
+    isAuthorized (AssignTagR _) _        = authorizedForPrivileges [PrvUser]
+    isAuthorized (ShowUserR _) _         = authorizedForPrivileges [PrvAdmin]
+    isAuthorized ShowUsersR _            = authorizedForPrivileges [PrvAdmin]
+    isAuthorized (DeletePermsR _) _      = authorizedForPrivileges [PrvAdmin]
+    isAuthorized (AssignUserPermsR _) _  = authorizedForPrivileges [PrvAdmin]
+    isAuthorized (AssignAdminPermsR _) _ = authorizedForPrivileges [PrvAdmin]
 
     addStaticContent
         :: Text  -- ^ The file extension

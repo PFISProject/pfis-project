@@ -23,7 +23,7 @@ User
     password   Text Maybe
     perms      [Privileges]
     UniqueUser ident
-    deriving   Typeable
+    deriving   Typeable Show Eq
 
 Email
     email       Text
