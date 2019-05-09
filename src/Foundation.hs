@@ -107,7 +107,7 @@ instance Yesod App where
                 , NavbarLeft $ MenuItem
                     { menuItemLabel = "Search articles by tag"
                     , menuItemRoute = SearchArticleByTagR
-                    , menuItemAccessCallback = isNothing muser
+                    , menuItemAccessCallback = True
                     }
                 , NavbarLeft $ MenuItem
                     { menuItemLabel = "View user profile"

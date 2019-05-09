@@ -1,10 +1,10 @@
 <div .ui.container>
 
     <h1>
-      Welcome to your profile 
+      Welcome #{userIdent user}
 
     <h3>
-       Articles of #{userIdent user}
-
-    <p>
-       Article test 
+       My articles  
+    <div .articles>
+           <h4>
+               <a href=#>The epic journey 

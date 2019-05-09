@@ -20,7 +20,14 @@
     text-align: center;
 }
 
-.comments, ul {
-    list-style-type: none;
+.comments {
     padding: 1rem;
+    border: 1px solid antiquewhite;
+}
+
+.comments li {
+    margin-bottom: 1rem;
+    padding: .8rem 0;
+    font-size: 17px;
+    list-style-type: none;
 }

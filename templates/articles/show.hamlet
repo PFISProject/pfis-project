@@ -1,16 +1,16 @@
-<div class="title">
+<div .title>
     <h1>#{articleTitle article}</h1>
-<div class="content">
+<div .content>
     <p>#{articleContent article}
-<div class="actions">
+<div .actions>
     <button onclick=deleteArticle("@{ArticleDeleteR articleId}") class="btn btn-submit">Delete</button>
     <a href=@{UpdateArticleR articleId}><button class="btn btn-submit">Update</button></a>
     <a href=@{AssignTagR articleId}><button class="btn btn-submit">Assign tag</button></a>
     <a href=@{AssignCommentR articleId}><button class="btn btn-submit">Comment</button></a>
 
 <hr>
-    <h3 class="comm-title">Comments</h3>
-    <div class="comments">
+    <h3 .comm-title>Comments</h3>
+    <div .comments>
         <ul>
             $forall Entity commentId comment <- comments
                     <li> #{commentMessage comment}

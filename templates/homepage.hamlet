@@ -13,10 +13,8 @@
                 <div .page-header>
                 <p .publ> 
                     Latest published articles 
-                <ul>
-                    $forall Entity articleId article <- articles
+                $forall Entity articleId article <- articles
+                   <div .publish>
                         <h4>
-                            <li>
-                                <a href=@{ShowArticleR articleId}>#{articleTitle article}
-
+                            <a href=@{ShowArticleR articleId}>#{articleTitle article}
     <hr>
