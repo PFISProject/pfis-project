@@ -16,7 +16,8 @@
     margin-top: -21px;
     color: white;
     text-align: center;
-    min-height: 240px;
+    min-height: 220px;
+    background-color: #3c68dd;
 }
 
 .masthead .header {
@@ -27,9 +28,10 @@
 
 .masthead h1.header {
     margin-top: 1em;
-    margin-bottom: 0em;
+    margin-bottom: 0.3em;
     font-size: 3.5em;
-    font-weight: normal;
+    font-weight: 700;
+    text-shadow: 6px 4px 2px rgba(4, 9, 37, 0.3);    
  }
 
 .masthead h2 {
@@ -50,6 +52,17 @@
   margin-bottom: 0;
 }
 
-p .text-muted {
+.form-control, input {
+    border-width: 2px;
+    box-shadow: none;
+    width: 50%;
+}
+
+.text-muted {
     color: #b4bcc2;
 }
+
+.footer {
+    margin: 15px auto;
+}
+

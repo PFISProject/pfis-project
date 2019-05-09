@@ -21,7 +21,6 @@
                         <a href="@{route}">#{label}
 
 <!-- Page Contents -->
-
 <div .container>
     $if not $ Just HomeR == mcurrentRoute
         <ul .breadcrumb>
@@ -48,3 +47,4 @@ $else
     <div .container>
         <p .text-muted>
             #{appCopyright $ appSettings master}
+

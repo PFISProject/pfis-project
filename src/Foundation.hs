@@ -119,7 +119,7 @@ instance Yesod App where
                     , menuItemRoute = ShowUsersR
                     , menuItemAccessCallback = isJust muser
                     }
-                , NavbarLeft $ MenuItem
+                , NavbarRight $ MenuItem
                     { menuItemLabel = "Login"
                     , menuItemRoute = AuthR LoginR
                     , menuItemAccessCallback = isNothing muser
@@ -204,11 +204,13 @@ instance Yesod App where
 instance YesodBreadcrumbs App where
 
     breadcrumb :: Route App -> Handler (Text, Maybe (Route App))
-    breadcrumb HomeR      = return ("Home", Nothing)
-    breadcrumb (AuthR _)  = return ("Login", Just HomeR)
-    breadcrumb ProfileR   = return ("Profile", Just HomeR)
-    breadcrumb ShowUsersR = return ("Users", Just HomeR)
-    breadcrumb  _         = return ("home", Nothing)
+    breadcrumb HomeR               = return ("Home", Nothing)
+    breadcrumb (AuthR _)           = return ("Login", Just HomeR)
+    breadcrumb ProfileR            = return ("Profile", Just HomeR)
+    breadcrumb ShowUsersR          = return ("Users", Just HomeR)
+    breadcrumb SearchArticleByTagR = return ("Search Article", Just HomeR)
+    breadcrumb CreateArticleR      = return ("Create Article", Just HomeR)
+    breadcrumb  _                  = return ("home", Nothing)
 
 -- How to run database actions.
 instance YesodPersist App where
