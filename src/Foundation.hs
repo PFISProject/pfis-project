@@ -251,7 +251,7 @@ isAuthenticated :: Handler AuthResult
 isAuthenticated = do
     muid <- maybeAuthId
     return $ case muid of
-        Nothing -> Unauthorized "Por favor primero acceda para ver esta página"
+        Nothing -> Unauthorized "Please login first to access this page"
         Just _  -> Authorized
 
 instance YesodAuthPersist App
@@ -260,11 +260,11 @@ authorizedForPrivileges :: [Privileges] -> Handler AuthResult
 authorizedForPrivileges perms = do
     mu <- maybeAuth
     return $ case mu of
-     Nothing -> Unauthorized "Por favor primero acceda para ver esta página"
+     Nothing -> Unauthorized "Please login first to access this page"
      Just u@(Entity userId user) ->
        if hasPrivileges u perms
             then Authorized
-            else Unauthorized "No tiene los permisos suficientes"
+            else Unauthorized "You don't have the required privileges"
 
 hasPrivilege :: Entity User -> Privileges -> Bool
 hasPrivilege u p = hasPrivileges u [p]
