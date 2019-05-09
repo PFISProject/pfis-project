@@ -16,6 +16,10 @@
 /article/show/#ArticleId    ShowArticleR        GET
 /article/comment/#ArticleId AssignCommentR      GET POST
 
+/user/delete/perms/#UserId  DeletePermsR        GET
+/user/assign/user/#UserId   AssignUserPermsR    GET
+/user/assign/admin/#UserId  AssignAdminPermsR   GET
+
 /user/all                   ShowUsersR          GET
 /user/show/#UserId          ShowUserR           GET
 
