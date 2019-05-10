@@ -109,11 +109,11 @@ instance Yesod App where
                     , menuItemRoute = SearchArticleByTagR
                     , menuItemAccessCallback = True
                     }
-                , NavbarLeft $ MenuItem
-                    { menuItemLabel = "View user profile"
-                    , menuItemRoute = ProfileR
-                    , menuItemAccessCallback = isJust muser
-                    }
+      --          , NavbarLeft $ MenuItem
+      --              { menuItemLabel = "View user profile"
+      --              , menuItemRoute = (ProfileR _) _
+      --              , menuItemAccessCallback = isJust muser
+      --              }
                 , NavbarLeft $ MenuItem
                     { menuItemLabel = "Edit user privileges"
                     , menuItemRoute = ShowUsersR
@@ -156,7 +156,7 @@ instance Yesod App where
     isAuthorized (ShowArticleR _) _      = return Authorized
     isAuthorized SearchArticleByTagR _   = return Authorized
 
-    isAuthorized ProfileR _              = isAuthenticated
+    isAuthorized (ProfileR _) _          = authorizedForPrivileges [PrvUser]
     isAuthorized CreateArticleR _        = authorizedForPrivileges [PrvUser]
     isAuthorized (UpdateArticleR _) _    = authorizedForPrivileges [PrvUser]
     isAuthorized (ArticleDeleteR _) _    = authorizedForPrivileges [PrvUser]
@@ -206,7 +206,7 @@ instance YesodBreadcrumbs App where
     breadcrumb :: Route App -> Handler (Text, Maybe (Route App))
     breadcrumb HomeR               = return ("Home", Nothing)
     breadcrumb (AuthR _)           = return ("Login", Just HomeR)
-    breadcrumb ProfileR            = return ("Profile", Just HomeR)
+    breadcrumb (ProfileR _)        = return ("Profile", Just HomeR)
     breadcrumb ShowUsersR          = return ("Users", Just HomeR)
     breadcrumb SearchArticleByTagR = return ("Search Article", Just HomeR)
     breadcrumb CreateArticleR      = return ("Create Article", Just HomeR)

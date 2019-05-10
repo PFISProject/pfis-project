@@ -6,5 +6,6 @@
     <h3>
        My articles  
     <div .articles>
-           <h4>
-               <a href=#>The epic journey 
+        $forall Entity articleId article <- articles
+            <h4>
+                <a href=@{ShowArticleR articleId}>#{articleTitle article}

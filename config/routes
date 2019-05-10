@@ -25,4 +25,4 @@
 
 /tag/assign/#ArticleId      AssignTagR          GET POST
 
-/profile                    ProfileR            GET
+/profile/#UserId            ProfileR            GET
