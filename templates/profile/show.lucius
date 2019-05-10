@@ -1,0 +1,13 @@
+h1 {
+    text-align: center;
+}
+
+ul {
+    list-style-type: none;
+}
+
+.articles {
+    margin-bottom: 1rem;
+    padding: .8rem 0;
+    font-size: 17px;
+}

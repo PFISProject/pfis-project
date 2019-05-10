@@ -15,7 +15,7 @@ articleForm :: AForm Handler Article
 articleForm = Article
     <$> areq textField (bfs ("Title"   :: Text)) Nothing
     <*> areq textField (bfs ("Content" :: Text)) Nothing
-    <*> areq intField  (bfs ("User id" :: Text)) Nothing
+    <*> areq intField (bfs ("User id"  :: Text)) Nothing
     <*> aopt intField  (bfs ("Score"   :: Text)) Nothing
 
 getCreateArticleR :: Handler Html
@@ -44,8 +44,8 @@ updateArticleForm :: AForm Handler Article
 updateArticleForm = Article
     <$> areq textField (bfs ("Title"   :: Text)) Nothing
     <*> areq textField (bfs ("Content" :: Text)) Nothing
-    <*> areq intField  (bfs ("User id" :: Text)) Nothing
-    <*> aopt intField  (bfs ("Score" :: Text)) Nothing
+    <*> areq intField (bfs ("User id"  :: Text)) Nothing
+    <*> aopt intField  (bfs ("Score"   :: Text)) Nothing
 
 getUpdateArticleR :: ArticleId -> Handler Html
 getUpdateArticleR articleId = do
@@ -71,5 +71,5 @@ getShowArticleR articleId = do
     article <- runDB $ get404 articleId
     comments <- runDB $ selectList [CommentArticle ==. articleId] []
     defaultLayout $ do
-        $(widgetFile "/articles/show")
+        $(widgetFile "articles/show")
 

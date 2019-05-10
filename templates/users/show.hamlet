@@ -1,5 +1,6 @@
-<h1> User info </h1>
+<h1> User #{userIdent user} </h1>
 
-<a><button class="btn btn-submit">Assign perms</button></a>
-<p><b>User id: </b>{#userId user}
-<p><b>Perms: </b>{#userPerms user}
+<div>
+    <a href=@{DeletePermsR userId}><button class="btn btn-submit">Delete perms</button></a>
+    <a href=@{AssignUserPermsR userId}><button class="btn btn-submit">User perms</button></a>
+    <a href=@{AssignAdminPermsR userId}><button class="btn btn-submit">Admin perms</button></a>

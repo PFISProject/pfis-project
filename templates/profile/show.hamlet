@@ -1,0 +1,11 @@
+<div .ui.container>
+
+    <h1>
+      Welcome #{userIdent user}
+
+    <h3>
+       My articles  
+    <div .articles>
+        $forall Entity articleId article <- articles
+            <h4>
+                <a href=@{ShowArticleR articleId}>#{articleTitle article}

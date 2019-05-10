@@ -4,7 +4,7 @@
 Article
     title     Text
     content   Text
-    userId    Int
+    author    Int 
     score     Int Maybe
     deriving  Show Eq
 
@@ -23,7 +23,7 @@ User
     password   Text Maybe
     perms      [Privileges]
     UniqueUser ident
-    deriving   Typeable
+    deriving   Typeable Show Eq
 
 Email
     email       Text

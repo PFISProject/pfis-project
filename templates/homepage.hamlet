@@ -2,19 +2,19 @@
     <div .container>
         <div .row>
             <h1 .header>
-                Last published articles
-
+                Haskblog
+            <p>
+                A place for functional devs
 
 <div .container>
     <div .bs-docs-section>
         <div .row>
             <div .col-lg-12>
                 <div .page-header>
-                <ul>
-                    $forall Entity articleId article <- articles
+                <p .publ> 
+                    Latest published articles 
+                $forall Entity articleId article <- articles
+                   <div .publish>
                         <h4>
-                            <li>
-                                <a href=@{ShowArticleR articleId}>#{articleTitle article}
-
-
+                            <a href=@{ShowArticleR articleId}>#{articleTitle article}
     <hr>

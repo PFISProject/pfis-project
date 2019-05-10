@@ -23,7 +23,6 @@ import qualified Data.CaseInsensitive     as CI
 import qualified Data.List                as L
 import qualified Data.Text.Encoding       as TE
 import           Yesod.Auth.OAuth2.Google
-import           Yesod.Auth.OpenId        (IdentifierType (Claimed), authOpenId)
 import           Yesod.Core.Types         (Logger)
 import qualified Yesod.Core.Unsafe        as Unsafe
 import           Yesod.Default.Util       (addStaticContentExternal)
@@ -35,7 +34,6 @@ clientSecret :: Text
 clientSecret = "PbOAC1g2aXlYvN3TnsGkp3CU"
 
 -- | The foundation datatype for your application. This can be a good place to
--- keep settings and values requiring initialization before your application
 -- starts running, such as database connections. Every handler will have
 -- access to the data present here.
 data App = App
@@ -88,6 +86,7 @@ instance Yesod App where
         master <- getYesod
         mmsg <- getMessage
 
+        muser <- maybeAuthPair
         mcurrentRoute <- getCurrentRoute
 
         -- Get the breadcrumbs, as defined in the YesodBreadcrumbs instance.
@@ -103,12 +102,32 @@ instance Yesod App where
                 , NavbarLeft $ MenuItem
                     { menuItemLabel = "Create article"
                     , menuItemRoute = CreateArticleR
-                    , menuItemAccessCallback = True
+                    , menuItemAccessCallback = isJust muser
                     }
                 , NavbarLeft $ MenuItem
-                    { menuItemLabel = "Search article by tag"
+                    { menuItemLabel = "Search articles by tag"
                     , menuItemRoute = SearchArticleByTagR
                     , menuItemAccessCallback = True
+                    }
+      --          , NavbarLeft $ MenuItem
+      --              { menuItemLabel = "View user profile"
+      --              , menuItemRoute = (ProfileR _) _
+      --              , menuItemAccessCallback = isJust muser
+      --              }
+                , NavbarLeft $ MenuItem
+                    { menuItemLabel = "Edit user privileges"
+                    , menuItemRoute = ShowUsersR
+                    , menuItemAccessCallback = isJust muser
+                    }
+                , NavbarRight $ MenuItem
+                    { menuItemLabel = "Login"
+                    , menuItemRoute = AuthR LoginR
+                    , menuItemAccessCallback = isNothing muser
+                    }
+                , NavbarRight $ MenuItem
+                    { menuItemLabel = "Logout"
+                    , menuItemRoute = AuthR LogoutR
+                    , menuItemAccessCallback = isJust muser
                     }
                 ]
 
@@ -129,21 +148,25 @@ instance Yesod App where
 
     isAuthorized :: Route App -> Bool -> Handler AuthResult
     -- Routes not requiring authentication.
-    isAuthorized (AuthR _) _           = return Authorized
-    isAuthorized HomeR _               = return Authorized
-    isAuthorized FaviconR _            = return Authorized
-    isAuthorized RobotsR _             = return Authorized
-    isAuthorized (StaticR _) _         = return Authorized
+    isAuthorized (AuthR _) _             = return Authorized
+    isAuthorized HomeR _                 = return Authorized
+    isAuthorized FaviconR _              = return Authorized
+    isAuthorized RobotsR _               = return Authorized
+    isAuthorized (StaticR _) _           = return Authorized
+    isAuthorized (ShowArticleR _) _      = return Authorized
+    isAuthorized SearchArticleByTagR _   = return Authorized
 
-    isAuthorized (ShowArticleR _) _    = return Authorized
-    isAuthorized SearchArticleByTagR _ = return Authorized
-    isAuthorized CreateArticleR _      = authorizedForPrivileges [PrvUser]
-    isAuthorized (UpdateArticleR _) _  = authorizedForPrivileges [PrvUser]
-    isAuthorized (ArticleDeleteR _) _  = authorizedForPrivileges [PrvUser]
-    isAuthorized (AssignCommentR _) _  = authorizedForPrivileges [PrvUser]
-    isAuthorized (AssignTagR _) _      = authorizedForPrivileges [PrvUser]
-    isAuthorized (ShowUserR _) _       = authorizedForPrivileges [PrvAdmin]
-    isAuthorized ShowUsersR _          = authorizedForPrivileges [PrvAdmin]
+    isAuthorized (ProfileR _) _          = authorizedForPrivileges [PrvUser]
+    isAuthorized CreateArticleR _        = authorizedForPrivileges [PrvUser]
+    isAuthorized (UpdateArticleR _) _    = authorizedForPrivileges [PrvUser]
+    isAuthorized (ArticleDeleteR _) _    = authorizedForPrivileges [PrvUser]
+    isAuthorized (AssignCommentR _) _    = authorizedForPrivileges [PrvUser]
+    isAuthorized (AssignTagR _) _        = authorizedForPrivileges [PrvUser]
+    isAuthorized (ShowUserR _) _         = authorizedForPrivileges [PrvAdmin]
+    isAuthorized ShowUsersR _            = authorizedForPrivileges [PrvAdmin]
+    isAuthorized (DeletePermsR _) _      = authorizedForPrivileges [PrvAdmin]
+    isAuthorized (AssignUserPermsR _) _  = authorizedForPrivileges [PrvAdmin]
+    isAuthorized (AssignAdminPermsR _) _ = authorizedForPrivileges [PrvAdmin]
 
     addStaticContent
         :: Text  -- ^ The file extension
@@ -181,10 +204,13 @@ instance Yesod App where
 instance YesodBreadcrumbs App where
 
     breadcrumb :: Route App -> Handler (Text, Maybe (Route App))
-    breadcrumb HomeR     = return ("Home", Nothing)
-    breadcrumb (AuthR _) = return ("Login", Just HomeR)
-    breadcrumb ProfileR  = return ("Profile", Just HomeR)
-    breadcrumb  _        = return ("home", Nothing)
+    breadcrumb HomeR               = return ("Home", Nothing)
+    breadcrumb (AuthR _)           = return ("Login", Just HomeR)
+    breadcrumb (ProfileR _)        = return ("Profile", Just HomeR)
+    breadcrumb ShowUsersR          = return ("Users", Just HomeR)
+    breadcrumb SearchArticleByTagR = return ("Search Article", Just HomeR)
+    breadcrumb CreateArticleR      = return ("Create Article", Just HomeR)
+    breadcrumb  _                  = return ("home", Nothing)
 
 -- How to run database actions.
 instance YesodPersist App where
@@ -220,12 +246,12 @@ instance YesodAuth App where
             Nothing -> Authenticated <$> insert User
                 { userIdent    = credsIdent creds
                 , userPassword = Nothing
-                , userPerms    = []
+                , userPerms    = [PrvUser]
                 }
 
     -- You can add other plugins like Google Email, email or OAuth here
     authPlugins :: App -> [AuthPlugin App]
-    authPlugins app = [authOpenId Claimed [], oauth2GoogleScoped ["email", "profile"] clientId clientSecret] ++ extraAuthPlugins
+    authPlugins app = [oauth2GoogleScoped ["email", "profile"] clientId clientSecret] ++ extraAuthPlugins
         -- Enable authDummy login if enabled.
         where extraAuthPlugins = [authDummy | appAuthDummyLogin $ appSettings app]
 
@@ -234,7 +260,7 @@ isAuthenticated :: Handler AuthResult
 isAuthenticated = do
     muid <- maybeAuthId
     return $ case muid of
-        Nothing -> Unauthorized "Por favor primero acceda para ver esta página"
+        Nothing -> Unauthorized "Please login first to access this page"
         Just _  -> Authorized
 
 instance YesodAuthPersist App
@@ -243,11 +269,11 @@ authorizedForPrivileges :: [Privileges] -> Handler AuthResult
 authorizedForPrivileges perms = do
     mu <- maybeAuth
     return $ case mu of
-     Nothing -> Unauthorized "Por favor primero acceda para ver esta página"
+     Nothing -> Unauthorized "Please login first to access this page"
      Just u@(Entity userId user) ->
        if hasPrivileges u perms
             then Authorized
-            else Unauthorized "No tiene los permisos suficientes"
+            else Unauthorized "You don't have the required privileges"
 
 hasPrivilege :: Entity User -> Privileges -> Bool
 hasPrivilege u p = hasPrivileges u [p]

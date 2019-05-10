@@ -1,0 +1,33 @@
+.title, h1 {
+    font-weight: 600;
+    font-size: 1.6em;
+    padding-bottom: 1rem;
+    text-align: center;
+    font-style: italic;
+}
+
+.content {
+    margin: 2rem 0.3rem;
+    font-size: 1.2em; 
+}
+
+.actions {
+    text-align: center;
+    display: block;
+}
+
+.comm-title, h3 {
+    text-align: center;
+}
+
+.comments {
+    padding: 1rem;
+    border: 1px solid antiquewhite;
+}
+
+.comments li {
+    margin-bottom: 1rem;
+    padding: .8rem 0;
+    font-size: 17px;
+    list-style-type: none;
+}
